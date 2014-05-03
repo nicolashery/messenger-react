@@ -112,7 +112,7 @@ gulp.task('build', function(cb) {
   runSequence(
     'clean',
     ['scripts', 'styles', 'index'],
-    // 'clean-tmp',
+    'clean-tmp',
   cb);
 });
 
