@@ -1,0 +1,36 @@
+// Clearfix
+// ====================================
+// Source: http://nicolasgallagher.com/micro-clearfix-hack/
+
+.clearfix() {
+  &:before,
+  &:after {
+    content: " "; // 1
+    display: table; // 2
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// Allow use as a class
+.clearfix {
+  .clearfix();
+}
+
+// Box sizing
+// ====================================
+
+.box-sizing(@boxmodel) {
+  -webkit-box-sizing: @boxmodel;
+     -moz-box-sizing: @boxmodel;
+          box-sizing: @boxmodel;
+}
+
+// Transforms
+// ====================================
+
+.transform(@transform) {
+  -webkit-transform: @transform;
+          transform: @transform;
+}

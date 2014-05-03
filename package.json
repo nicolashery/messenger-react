@@ -1,0 +1,36 @@
+{
+  "name": "messenger-react",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "reactify": "^0.13.1",
+    "envify": "^1.2.1",
+    "react": "^0.9.0",
+    "react-touch": "git://github.com/nicolashery/react-touch-lib.git"
+  },
+  "devDependencies": {
+    "async": "^0.7.0",
+    "browserify": "^3.44.2",
+    "connect": "^2.14.3",
+    "less": "^1.7.0",
+    "lodash": "^2.4.1",
+    "send": "^0.3.0",
+    "serve-static": "^1.1.0",
+    "simple-glob": "^0.1.0",
+    "run-sequence": "^0.3.6",
+    "event-stream": "^3.1.5",
+    "gulp-template": "^0.1.1",
+    "vinyl-source-stream": "^0.1.1",
+    "gulp-minify-css": "^0.3.4",
+    "gulp-concat": "^2.2.0",
+    "gulp-uglify": "^0.2.1",
+    "gulp": "^3.6.2",
+    "gulp-clean": "^0.2.4",
+    "gulp-less": "^1.2.3",
+    "gulp-streamify": "0.0.5",
+    "webdev": "git://github.com/nicolashery/webdev.git"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}
