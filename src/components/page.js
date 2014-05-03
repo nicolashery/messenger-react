@@ -2,6 +2,8 @@
 
 var React = window.React;
 
+require('./page.less');
+
 var Page = React.createClass({
   getDefaultProps: function() {
     return {

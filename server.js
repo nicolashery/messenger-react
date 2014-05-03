@@ -3,11 +3,9 @@ var http = require('http');
 var connect = require('connect');
 var serveStatic = require('serve-static');
 
-var buildDir = 'dist';
-
 var app = connect();
 
-var staticDir = __dirname + '/' + buildDir;
+var staticDir = __dirname;
 app.use(serveStatic(staticDir));
 
 var port = process.env.PORT || 3000;

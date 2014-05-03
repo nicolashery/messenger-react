@@ -3,6 +3,8 @@
 var React = window.React;
 var Scroller = window.Scroller;
 
+require('./pageslider.less');
+
 var AnimatableContainer = require('react-touch/lib/primitives/AnimatableContainer');
 
 var PageSlider = React.createClass({

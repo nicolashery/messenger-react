@@ -43,13 +43,12 @@ Clone this repo and install dependencies:
 
 ```bash
 $ npm install
-$ bower install
 ```
 
 Start development server with:
 
 ```bash
-$ node develop
+$ npm run-script develop
 ```
 
 Point your browser to `http://localhost:3000`.
@@ -59,13 +58,13 @@ Point your browser to `http://localhost:3000`.
 To build the production version run:
 
 ```bash
-$ gulp build
+$ npm run-script build
 ```
 
 To test the production build, start the static server:
 
 ```bash
-$ node server
+$ npm run-script server
 ```
 
 Point your browser to `http://localhost:3000`.

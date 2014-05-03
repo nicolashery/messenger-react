@@ -3,6 +3,8 @@
 var React = window.React;
 var _ = window._;
 
+require('./core/core.less');
+
 var Page = require('./components/page');
 var PageSlider = require('./components/pageslider');
 
