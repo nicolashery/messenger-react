@@ -26,7 +26,7 @@ gulp.task('scripts-vendor', function() {
   });
 
   return gulp.src(vendors)
-    // .pipe(uglify())
+    .pipe(uglify())
     .pipe(concat('vendor.js'))
     .pipe(gulp.dest('dist/tmp'));
 });
@@ -41,13 +41,13 @@ gulp.task('scripts-app', function() {
       this.emit('end');
     })
     .pipe(source('app.js'))
-    // .pipe(streamify(uglify()))
+    .pipe(streamify(uglify()))
     .pipe(gulp.dest('dist/tmp'));
 });
 
 gulp.task('scripts-start', function() {
   return gulp.src('app/start.js')
-    // .pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest('dist/tmp'));
 });
 
