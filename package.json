@@ -3,14 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "reactify": "^0.13.1",
-    "envify": "^1.2.1",
-    "react": "^0.9.0",
     "react-touch": "git://github.com/nicolashery/react-touch-lib.git"
   },
   "devDependencies": {
     "async": "^0.7.0",
     "browserify": "^3.44.2",
+    "reactify": "^0.13.1",
     "connect": "^2.14.3",
     "less": "^1.7.0",
     "lodash": "^2.4.1",
