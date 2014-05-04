@@ -58,10 +58,11 @@
 	var React = window.React;
 	var _ = window._;
 
-	__webpack_require__(5);
+	__webpack_require__(6);
 
-	var Page = __webpack_require__(3);
-	var PageSlider = __webpack_require__(4);
+	var Header = __webpack_require__(3);
+	var Page = __webpack_require__(4);
+	var PageSlider = __webpack_require__(5);
 
 	// Shallow difference of two objects
 	// Returns all attributes and their values in `destination`
@@ -84,7 +85,8 @@
 	    return {
 	      previousPage: null,
 	      nextPage: 'home',
-	      slideInFrom: null
+	      slideInFrom: null,
+	      headerTitle: this.getPageTitle('home')
 	    };
 	  },
 
@@ -107,10 +109,14 @@
 	    };
 
 	    return (
-	      PageSlider( {ref:"pageContainer",
-	         nextPage:nextPage,
-	         previousPage:previousPage,
-	         slideInFrom:this.state.slideInFrom})
+	      React.DOM.div(null, 
+	        Header( {ref:"header",
+	          title:this.state.headerTitle}),
+	        PageSlider( {ref:"pageSlider",
+	           nextPage:nextPage,
+	           previousPage:previousPage,
+	           slideInFrom:this.state.slideInFrom})
+	      )
 	     );
 	  },
 
@@ -119,9 +125,9 @@
 
 	    if (name === 'home') {
 	      return Page({
-	        title: 'Home',
-	        link: 'Page one',
-	        color: 'blue',
+	        title: this.getPageTitle('home'),
+	        link: this.getPageTitle('one'),
+	        itemCount: 50,
 	        onClickLink: function() {
 	          self.switchPage({
 	            page: 'one',
@@ -133,9 +139,8 @@
 
 	    if (name === 'one') {
 	      return Page({
-	        title: 'Page one',
-	        link: 'Home',
-	        color: 'red',
+	        title: this.getPageTitle('one'),
+	        link: this.getPageTitle('home'),
 	        onClickLink: function() {
 	          self.switchPage({
 	            page: 'home',
@@ -152,8 +157,21 @@
 	    this.setState({
 	      previousPage: this.state.nextPage,
 	      nextPage: instructions.page,
-	      slideInFrom: instructions.slideInFrom || null
+	      slideInFrom: instructions.slideInFrom || null,
+	      headerTitle: this.getPageTitle(instructions.page)
 	    });
+	  },
+
+	  getPageTitle: function(name) {
+	    if (name === 'home') {
+	      return 'Home';
+	    }
+
+	    if (name === 'one') {
+	      return 'Page one';
+	    }
+
+	    return 'No title';
 	  }
 	});
 
@@ -183,27 +201,60 @@
 
 	var React = window.React;
 
-	__webpack_require__(8);
+	__webpack_require__(9);
+
+	var Header = React.createClass({displayName: 'Header',
+	  getDefaultProps: function() {
+	    return {
+	      title: 'Page title'
+	    };
+	  },
+
+	  render: function() {
+	    return (
+	      React.DOM.div( {className:"header"}, 
+	        React.DOM.div( {className:"header-title"}, this.props.title)
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Header;
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM */
+
+	var React = window.React;
+	var _ = window._;
+
+	__webpack_require__(11);
 
 	var Page = React.createClass({displayName: 'Page',
 	  getDefaultProps: function() {
 	    return {
 	      title: 'Page title',
 	      link: 'Link',
-	      color: 'blue',
+	      itemCount: 0,
 	      onClickLink: function() {}
 	    };
 	  },
 
 	  render: function() {
-	    var className = 'page page-' + this.props.color;
+	    var items = _.range(this.props.itemCount).map(function(i) {
+	      return React.DOM.p( {key:i}, 'Item ' + i);
+	    });
 
 	    return (
-	      React.DOM.div( {className:className}, 
+	      React.DOM.div( {className:"page"}, 
 	        React.DOM.h2(null, this.props.title),
 	        React.DOM.p(null, 
 	          React.DOM.a( {href:"", onClick:this.handleClick}, this.props.link)
-	        )
+	        ),
+	        items
 	      )
 	    );
 	  },
@@ -219,7 +270,7 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM */
@@ -227,9 +278,9 @@
 	var React = window.React;
 	var Scroller = window.Scroller;
 
-	__webpack_require__(10);
+	__webpack_require__(13);
 
-	var AnimatableContainer = __webpack_require__(16);
+	var AnimatableContainer = __webpack_require__(19);
 
 	var PageSlider = React.createClass({displayName: 'PageSlider',
 	  // A "page" object has a unique "key" and a "content" attribute
@@ -240,7 +291,7 @@
 	  },
 
 	  componentWillMount: function() {
-	    this.scroller = new Scroller(this._handleScroll, {
+	    this.scroller = window.scroller = new Scroller(this._handleScroll, {
 	      bouncing: false,
 	      scrollingX: true,
 	      scrollingY: false,
@@ -329,7 +380,8 @@
 	        React.DOM.div(null, 
 	          AnimatableContainer( {className:"page-slider-container",
 	            key:previousPage.key,
-	            translate:{x: -this.state.scrollX}}, 
+	            translate:{x: -this.state.scrollX},
+	            opacity:1 - this.state.scrollX/this.pageWidth}, 
 	            previousPage.content
 	          ),
 	          AnimatableContainer( {className:"page-slider-container",
@@ -351,7 +403,8 @@
 	          ),
 	          AnimatableContainer( {className:"page-slider-container",
 	            key:previousPage.key,
-	            translate:{x: this.state.scrollX}}, 
+	            translate:{x: this.state.scrollX},
+	            opacity:1 - this.state.scrollX/this.pageWidth}, 
 	            previousPage.content
 	          )
 	        )
@@ -375,27 +428,27 @@
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
-	var dispose = __webpack_require__(7)
+	var dispose = __webpack_require__(8)
 		// The css code:
-		(__webpack_require__(6))
+		(__webpack_require__(7))
 	if(false) {
 		module.hot.accept();
 		module.hot.dispose(dispose);
 	}
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
 		".clearfix:before,\n.clearfix:after {\n  content: \" \";\n  display: table;\n}\n.clearfix:after {\n  clear: both;\n}\n/*! normalize.css v2.1.3 | MIT License | git.io/normalize */\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmain,\nnav,\nsection,\nsummary {\n  display: block;\n}\naudio,\ncanvas,\nvideo {\n  display: inline-block;\n}\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n[hidden],\ntemplate {\n  display: none;\n}\nhtml {\n  font-family: sans-serif;\n  -ms-text-size-adjust: 100%;\n  -webkit-text-size-adjust: 100%;\n}\nbody {\n  margin: 0;\n}\na {\n  background: transparent;\n}\na:focus {\n  outline: thin dotted;\n}\na:active,\na:hover {\n  outline: 0;\n}\nh1 {\n  font-size: 2em;\n  margin: 0.67em 0;\n}\nabbr[title] {\n  border-bottom: 1px dotted;\n}\nb,\nstrong {\n  font-weight: bold;\n}\ndfn {\n  font-style: italic;\n}\nhr {\n  -moz-box-sizing: content-box;\n  box-sizing: content-box;\n  height: 0;\n}\nmark {\n  background: #ff0;\n  color: #000;\n}\ncode,\nkbd,\npre,\nsamp {\n  font-family: monospace, serif;\n  font-size: 1em;\n}\npre {\n  white-space: pre-wrap;\n}\nq {\n  quotes: \"\\201C\" \"\\201D\" \"\\2018\" \"\\2019\";\n}\nsmall {\n  font-size: 80%;\n}\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\nsup {\n  top: -0.5em;\n}\nsub {\n  bottom: -0.25em;\n}\nimg {\n  border: 0;\n}\nsvg:not(:root) {\n  overflow: hidden;\n}\nfigure {\n  margin: 0;\n}\nfieldset {\n  border: 1px solid #c0c0c0;\n  margin: 0 2px;\n  padding: 0.35em 0.625em 0.75em;\n}\nlegend {\n  border: 0;\n  padding: 0;\n}\nbutton,\ninput,\nselect,\ntextarea {\n  font-family: inherit;\n  font-size: 100%;\n  margin: 0;\n}\nbutton,\ninput {\n  line-height: normal;\n}\nbutton,\nselect {\n  text-transform: none;\n}\nbutton,\nhtml input[type=\"button\"],\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  -webkit-appearance: button;\n  cursor: pointer;\n}\nbutton[disabled],\nhtml input[disabled] {\n  cursor: default;\n}\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n  box-sizing: border-box;\n  padding: 0;\n}\ninput[type=\"search\"] {\n  -webkit-appearance: textfield;\n  -moz-box-sizing: content-box;\n  -webkit-box-sizing: content-box;\n  box-sizing: content-box;\n}\ninput[type=\"search\"]::-webkit-search-cancel-button,\ninput[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  border: 0;\n  padding: 0;\n}\ntextarea {\n  overflow: auto;\n  vertical-align: top;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\n* {\n  -webkit-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n}\n*:before,\n*:after {\n  -webkit-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n}\nhtml {\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n}\nbody {\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  line-height: 20px;\n  color: #555555;\n  background-color: #cccccc;\n}\ninput,\nbutton,\nselect,\ntextarea {\n  font-family: inherit;\n  font-size: inherit;\n  line-height: inherit;\n}\na {\n  color: #00a0df;\n  text-decoration: none;\n}\na:hover,\na:focus {\n  color: #006993;\n  text-decoration: underline;\n}\nimg {\n  vertical-align: middle;\n}\n";
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -421,59 +474,79 @@
 	}
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
-	var dispose = __webpack_require__(7)
+	var dispose = __webpack_require__(8)
 		// The css code:
-		(__webpack_require__(9))
+		(__webpack_require__(10))
 	if(false) {
 		module.hot.accept();
 		module.hot.dispose(dispose);
 	}
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports =
-		".page {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  padding: 20px;\n}\n.page-blue {\n  background: #c0efff;\n}\n.page-red {\n  background: #ffb5bd;\n}\n";
 
 /***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports =
+		".header {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100%;\n  z-index: 1010;\n  height: 50px;\n  line-height: 50px;\n  border-bottom: 1px solid #ccc;\n  padding-left: 10px;\n  padding-right: 10px;\n  background: #fff;\n}\n.header-title {\n  font-weight: bold;\n  text-align: center;\n}\n";
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
-	var dispose = __webpack_require__(7)
+	var dispose = __webpack_require__(8)
 		// The css code:
-		(__webpack_require__(11))
+		(__webpack_require__(12))
 	if(false) {
 		module.hot.accept();
 		module.hot.dispose(dispose);
 	}
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
-		".page-slider-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n}\n";
+		".page {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  padding: 20px;\n  background: #fff;\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n";
 
 /***/ },
-/* 12 */,
-/* 13 */,
-/* 14 */,
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	var dispose = __webpack_require__(8)
+		// The css code:
+		(__webpack_require__(14))
+	if(false) {
+		module.hot.accept();
+		module.hot.dispose(dispose);
+	}
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports =
+		".page-slider-container {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  width: 100%;\n  height: 100%;\n}\n";
+
+/***/ },
 /* 15 */,
-/* 16 */
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM */
 
-	var React = __webpack_require__(17);
+	var React = __webpack_require__(20);
 
-	var StaticContainer = __webpack_require__(18);
-	var StyleKeys = __webpack_require__(19);
+	var StaticContainer = __webpack_require__(21);
+	var StyleKeys = __webpack_require__(22);
 
 	var POLL_FACTOR = .5;
 
@@ -605,7 +678,7 @@
 
 
 /***/ },
-/* 17 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = window.React;
@@ -614,12 +687,12 @@
 
 
 /***/ },
-/* 18 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM */
 
-	var React = __webpack_require__(17);
+	var React = __webpack_require__(20);
 
 	var StaticContainer = React.createClass({displayName: 'StaticContainer',
 	  getDefaultProps: function() {
@@ -639,7 +712,7 @@
 
 
 /***/ },
-/* 19 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var TRANSFORM_KEY = typeof document.body.style.MozTransform !== 'undefined' ? 'MozTransform' : 'WebkitTransform';
