@@ -9,16 +9,13 @@ var Page = React.createClass({
     return {
       title: 'Page title',
       link: 'Link',
-      color: 'blue',
       onClickLink: function() {}
     };
   },
 
   render: function() {
-    var className = 'page page-' + this.props.color;
-
     return (
-      <div className={className}>
+      <div className="page">
         <h2>{this.props.title}</h2>
         <p>
           <a href="" onClick={this.handleClick}>{this.props.link}</a>

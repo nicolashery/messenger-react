@@ -66,7 +66,6 @@ var App = React.createClass({
       return Page({
         title: 'Home',
         link: 'Page one',
-        color: 'blue',
         onClickLink: function() {
           self.switchPage({
             page: 'one',
@@ -80,7 +79,6 @@ var App = React.createClass({
       return Page({
         title: 'Page one',
         link: 'Home',
-        color: 'red',
         onClickLink: function() {
           self.switchPage({
             page: 'home',

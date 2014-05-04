@@ -16,7 +16,7 @@ var PageSlider = React.createClass({
   },
 
   componentWillMount: function() {
-    this.scroller = new Scroller(this._handleScroll, {
+    this.scroller = window.scroller = new Scroller(this._handleScroll, {
       bouncing: false,
       scrollingX: true,
       scrollingY: false,
@@ -105,7 +105,8 @@ var PageSlider = React.createClass({
         <div>
           <AnimatableContainer className="page-slider-container"
             key={previousPage.key}
-            translate={{x: -this.state.scrollX}}>
+            translate={{x: -this.state.scrollX}}
+            opacity={1 - this.state.scrollX/this.pageWidth}>
             {previousPage.content}
           </AnimatableContainer>
           <AnimatableContainer className="page-slider-container"
@@ -127,7 +128,8 @@ var PageSlider = React.createClass({
           </AnimatableContainer>
           <AnimatableContainer className="page-slider-container"
             key={previousPage.key}
-            translate={{x: this.state.scrollX}}>
+            translate={{x: this.state.scrollX}}
+            opacity={1 - this.state.scrollX/this.pageWidth}>
             {previousPage.content}
           </AnimatableContainer>
         </div>
