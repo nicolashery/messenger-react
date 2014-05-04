@@ -5,6 +5,7 @@ var _ = window._;
 
 require('./core/core.less');
 
+var Header = require('./components/header');
 var Page = require('./components/page');
 var PageSlider = require('./components/pageslider');
 
@@ -29,7 +30,8 @@ var App = React.createClass({
     return {
       previousPage: null,
       nextPage: 'home',
-      slideInFrom: null
+      slideInFrom: null,
+      headerTitle: this.getPageTitle('home')
     };
   },
 
@@ -52,10 +54,14 @@ var App = React.createClass({
     };
 
     return (
-      <PageSlider ref="pageContainer"
-         nextPage={nextPage}
-         previousPage={previousPage}
-         slideInFrom={this.state.slideInFrom}/>
+      <div>
+        <Header ref="header"
+          title={this.state.headerTitle}/>
+        <PageSlider ref="pageSlider"
+           nextPage={nextPage}
+           previousPage={previousPage}
+           slideInFrom={this.state.slideInFrom}/>
+      </div>
      );
   },
 
@@ -64,8 +70,9 @@ var App = React.createClass({
 
     if (name === 'home') {
       return Page({
-        title: 'Home',
-        link: 'Page one',
+        title: this.getPageTitle('home'),
+        link: this.getPageTitle('one'),
+        itemCount: 50,
         onClickLink: function() {
           self.switchPage({
             page: 'one',
@@ -77,8 +84,8 @@ var App = React.createClass({
 
     if (name === 'one') {
       return Page({
-        title: 'Page one',
-        link: 'Home',
+        title: this.getPageTitle('one'),
+        link: this.getPageTitle('home'),
         onClickLink: function() {
           self.switchPage({
             page: 'home',
@@ -95,8 +102,21 @@ var App = React.createClass({
     this.setState({
       previousPage: this.state.nextPage,
       nextPage: instructions.page,
-      slideInFrom: instructions.slideInFrom || null
+      slideInFrom: instructions.slideInFrom || null,
+      headerTitle: this.getPageTitle(instructions.page)
     });
+  },
+
+  getPageTitle: function(name) {
+    if (name === 'home') {
+      return 'Home';
+    }
+
+    if (name === 'one') {
+      return 'Page one';
+    }
+
+    return 'No title';
   }
 });
 
