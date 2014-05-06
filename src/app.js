@@ -5,9 +5,13 @@ var _ = window._;
 
 require('./core/core.less');
 
+var store = require('./core/store');
+var initialItems = require('./data/items.json');
+
 var Header = require('./components/header');
 var Page = require('./components/page');
 var PageSlider = require('./components/pageslider');
+var ItemList = require('./components/itemlist');
 
 // Shallow difference of two objects
 // Returns all attributes and their values in `destination`
@@ -29,10 +33,17 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       previousPage: null,
-      nextPage: 'home',
+      nextPage: 'items',
       slideInFrom: null,
-      headerTitle: this.getPageTitle('home')
+      headerTitle: this.getPageTitle('items'),
+      items: [],
+      selectedItem: null
     };
+  },
+
+  componentWillMount: function() {
+    store.resetItems(initialItems);
+    this.setState({items: store.getItems()})
   },
 
   componentWillUpdate: function(nextProps, nextState) {
@@ -68,31 +79,33 @@ var App = React.createClass({
   renderPage: function(name) {
     var self = this;
 
-    if (name === 'home') {
-      return Page({
-        title: this.getPageTitle('home'),
-        link: this.getPageTitle('one'),
-        itemCount: 50,
-        onClickLink: function() {
-          self.switchPage({
-            page: 'one',
-            slideInFrom: 'right'
-          });
-        }
-      });
+    if (name === 'items') {
+      return (
+        <Page>
+          <ItemList
+            items={this.state.items}
+            onSelectItem={this.handleSelectItem}/>
+        </Page>
+      );
     }
 
-    if (name === 'one') {
-      return Page({
-        title: this.getPageTitle('one'),
-        link: this.getPageTitle('home'),
-        onClickLink: function() {
-          self.switchPage({
-            page: 'home',
-            slideInFrom: 'left'
-          });
-        }
-      });
+    if (name === 'item-details') {
+      var item = this.state.selectedItem || {};
+      return (
+        <Page>
+          <div className="content-padded">
+          <p>
+            <a href="" onClick={this.handleBackToItemList}>
+              Back to item list
+            </a>
+          </p>
+          <h2>id</h2>
+          <p>{item.id}</p>
+          <h2>text</h2>
+          <p>{item.text}</p>
+          </div>
+        </Page>
+      );
     }
 
     return null;
@@ -108,15 +121,30 @@ var App = React.createClass({
   },
 
   getPageTitle: function(name) {
-    if (name === 'home') {
-      return 'Home';
+    if (name === 'items') {
+      return 'All Items';
     }
 
-    if (name === 'one') {
-      return 'Page one';
+    if (name === 'item-details') {
+      return 'Item Details';
     }
 
-    return 'No title';
+    return 'No Title';
+  },
+
+  handleSelectItem: function(item) {
+    this.setState({selectedItem: item});
+    this.switchPage({page: 'item-details', slideInFrom: 'right'});
+  },
+
+  handleBackToItemList: function(e) {
+    if (e) {
+      e.preventDefault();
+    }
+
+    this.switchPage({page: 'items', slideInFrom: 'left'});
+    // NOTE: can't do this because page still visible during transition
+    // this.setState({selectedItem: null});
   }
 });
 

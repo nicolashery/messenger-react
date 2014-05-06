@@ -1,0 +1,31 @@
+// List groups
+// ====================================
+
+// Parent
+// Use on <ul>, <ol>, or <div>
+.list-group {
+  // Override default ul/ol
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Individual list items
+// Use on <li> or <div> within the `.list-group` parent
+.list-group-item {
+  display: block;
+}
+
+// List item that's also a link
+// Use on <a> within the `.list-group-item` parent
+.list-group-item-link {
+  display: block;
+
+  // Override default link styles
+  &,
+  &:hover,
+  &:focus {
+    color: @text-color;
+    text-decoration: none;
+  }
+}
