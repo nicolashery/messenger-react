@@ -1,0 +1,62 @@
+// Non-controls
+// ====================================
+
+label,
+.form-label {
+  display: block;
+}
+
+// Help text under form controls
+.form-help-block {
+  margin-top: 5px;
+}
+
+// Form controls
+// ====================================
+
+@form-control-border-size:         2px;
+@form-control-border-color:        #ccc;
+@form-control-border-color-focus:  #79d0f2;
+@form-control-height:              (2*@line-height-base);
+
+.form-control {
+  display: block;
+  width: 100%;
+
+  font-size: @font-size-base;
+  height: @form-control-height;
+  line-height: @line-height-base;
+  vertical-align: middle;
+
+  padding: ((@form-control-height - @line-height-base)/2 - @form-control-border-size) 5px;
+
+  border: @form-control-border-size solid @form-control-border-color;
+  border-radius: 0px;
+
+  color: #000;
+
+  // Remove inset shadow in iOS
+  -webkit-appearance: none;
+
+  &:focus {
+    // Disable default WebKit focus style
+    outline: 0;
+
+    border-color: @form-control-border-color-focus;
+  }
+
+  // Reset height for `textarea`s
+  textarea& {
+    height: auto;
+  }
+}
+
+// Special styles for iOS date input
+//
+// In Mobile Safari, date inputs require a pixel line-height that matches the
+// given height of the input.
+input[type="date"] {
+  line-height: @form-control-height;
+  padding-top: 0;
+  padding-bottom: 0;
+}

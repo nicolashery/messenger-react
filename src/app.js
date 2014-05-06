@@ -4,6 +4,7 @@ var React = window.React;
 var _ = window._;
 
 require('./core/core.less');
+require('./app.less');
 
 var store = require('./core/store');
 var initialItems = require('./data/items.json');
@@ -12,6 +13,7 @@ var Header = require('./components/header');
 var Page = require('./components/page');
 var PageSlider = require('./components/pageslider');
 var ItemList = require('./components/itemlist');
+var ItemForm = require('./components/itemform');
 
 // Shallow difference of two objects
 // Returns all attributes and their values in `destination`
@@ -43,7 +45,7 @@ var App = React.createClass({
 
   componentWillMount: function() {
     store.resetItems(initialItems);
-    this.setState({items: store.getItems()})
+    this.setState({items: store.getItems()});
   },
 
   componentWillUpdate: function(nextProps, nextState) {
@@ -82,9 +84,13 @@ var App = React.createClass({
     if (name === 'items') {
       return (
         <Page>
-          <ItemList
-            items={this.state.items}
-            onSelectItem={this.handleSelectItem}/>
+          <div className="items">
+            <ItemList
+              items={this.state.items}
+              onSelectItem={this.handleSelectItem}/>
+            <ItemForm
+              onSubmit={this.handleAddItem}/>
+          </div>
         </Page>
       );
     }
@@ -93,16 +99,16 @@ var App = React.createClass({
       var item = this.state.selectedItem || {};
       return (
         <Page>
-          <div className="content-padded">
-          <p>
-            <a href="" onClick={this.handleBackToItemList}>
-              Back to item list
-            </a>
-          </p>
-          <h2>id</h2>
-          <p>{item.id}</p>
-          <h2>text</h2>
-          <p>{item.text}</p>
+          <div className="item-details">
+            <p>
+              <a href="" onClick={this.handleBackToItemList}>
+                Back to item list
+              </a>
+            </p>
+            <h2>id</h2>
+            <p>{item.id}</p>
+            <h2>text</h2>
+            <p>{item.text}</p>
           </div>
         </Page>
       );
@@ -145,6 +151,11 @@ var App = React.createClass({
     this.switchPage({page: 'items', slideInFrom: 'left'});
     // NOTE: can't do this because page still visible during transition
     // this.setState({selectedItem: null});
+  },
+
+  handleAddItem: function(item) {
+    store.addItem(item);
+    this.setState({items: store.getItems()});
   }
 });
 

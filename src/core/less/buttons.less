@@ -1,0 +1,55 @@
+// Base button
+// ====================================
+
+.btn {
+  display: inline-block;
+  margin: 0;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  white-space: nowrap;
+  background-image: none;
+
+  border: 0;
+  border-radius: 0px;
+
+  font-size: inherit;
+  line-height: 30px;
+  padding: 0 20px;
+
+  font-weight: bold;
+
+  &:hover,
+  &:focus {
+    outline: 0;
+    text-decoration: none;
+  }
+
+  &:active,
+  &.active {
+    outline: 0;
+    background-image: none;
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    cursor: not-allowed;
+    pointer-events: none; // Future-proof disabling of clicks
+    opacity: .65;
+  }
+}
+
+// Button styles
+// ====================================
+
+// Main action button style
+.btn-primary {
+  background-color: #0b9eb3;
+  color: #fff;
+
+  .no-touch &:hover,
+  &:focus {
+    background-color: #155e63;
+  }
+}
