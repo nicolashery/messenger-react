@@ -10,8 +10,8 @@ var store = require('./core/store');
 var initialItems = require('./data/items.json');
 
 var Header = require('./components/header');
-var Page = require('./components/page');
-var PageSlider = require('./components/pageslider');
+var Content = require('./components/content');
+var ContentSlider = require('./components/contentslider');
 var ItemList = require('./components/itemlist');
 var ItemForm = require('./components/itemform');
 
@@ -59,18 +59,18 @@ var App = React.createClass({
   render: function() {
     var previousPage = {
       key: this.state.previousPage,
-      content: this.renderPage(this.state.previousPage)
+      content: this.renderContent(this.state.previousPage)
     };
     var nextPage = {
       key: this.state.nextPage,
-      content: this.renderPage(this.state.nextPage)
+      content: this.renderContent(this.state.nextPage)
     };
 
     return (
       <div>
         <Header ref="header"
           title={this.state.headerTitle}/>
-        <PageSlider ref="pageSlider"
+        <ContentSlider hasHeader={true} ref="contentSlider"
            nextPage={nextPage}
            previousPage={previousPage}
            slideInFrom={this.state.slideInFrom}/>
@@ -78,39 +78,35 @@ var App = React.createClass({
      );
   },
 
-  renderPage: function(name) {
+  renderContent: function(name) {
     var self = this;
 
     if (name === 'items') {
       return (
-        <Page>
-          <div className="items">
-            <ItemList
-              items={this.state.items}
-              onSelectItem={this.handleSelectItem}/>
-            <ItemForm
-              onSubmit={this.handleAddItem}/>
-          </div>
-        </Page>
+        <div className="items">
+          <ItemList
+            items={this.state.items}
+            onSelectItem={this.handleSelectItem}/>
+          <ItemForm
+            onSubmit={this.handleAddItem}/>
+        </div>
       );
     }
 
     if (name === 'item-details') {
       var item = this.state.selectedItem || {};
       return (
-        <Page>
-          <div className="item-details">
-            <p>
-              <a href="" onClick={this.handleBackToItemList}>
-                Back to item list
-              </a>
-            </p>
-            <h2>id</h2>
-            <p>{item.id}</p>
-            <h2>text</h2>
-            <p>{item.text}</p>
-          </div>
-        </Page>
+        <div className="item-details">
+          <p>
+            <a href="" onClick={this.handleBackToItemList}>
+              Back to item list
+            </a>
+          </p>
+          <h2>id</h2>
+          <p>{item.id}</p>
+          <h2>text</h2>
+          <p>{item.text}</p>
+        </div>
       );
     }
 

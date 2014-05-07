@@ -3,16 +3,19 @@
 var React = window.React;
 var Scroller = window.Scroller;
 
-require('./pageslider.less');
+require('./contentslider.less');
 
 var AnimatableContainer = require('react-touch/lib/primitives/AnimatableContainer');
+// Make sure we have content CSS rules
+require('./content');
 
-var PageSlider = React.createClass({
+var ContentSlider = React.createClass({
   // A "page" object has a unique "key" and a "content" attribute
   propTypes: {
     nextPage: React.PropTypes.object.isRequired,
     previousPage: React.PropTypes.object,
-    slideInFrom: React.PropTypes.oneOf(['right', 'left'])
+    slideInFrom: React.PropTypes.oneOf(['right', 'left']),
+    hasHeader: React.PropTypes.bool
   },
 
   componentWillMount: function() {
@@ -100,19 +103,32 @@ var PageSlider = React.createClass({
     var previousPage = this.props.previousPage;
     var slideInFrom = this.props.slideInFrom;
 
+    var className = 'contentslider content content-overflow-scroll';
+    if (this.props.hasHeader) {
+      className = className + ' content-has-header';
+    }
+
+    var previousPageNode = (
+      <div className="content-scroll">{previousPage.content}</div>
+    );
+
+    var nextPageNode = (
+      <div className="content-scroll">{nextPage.content}</div>
+    );
+
     if (previousPage && slideInFrom === 'right' && !this.isScrollComplete()) {
       return (
         <div>
-          <AnimatableContainer className="page-slider-container"
+          <AnimatableContainer className={className}
             key={previousPage.key}
             translate={{x: -this.state.scrollX}}
             opacity={1 - this.state.scrollX/this.pageWidth}>
-            {previousPage.content}
+            {previousPageNode}
           </AnimatableContainer>
-          <AnimatableContainer className="page-slider-container"
+          <AnimatableContainer className={className}
             key={nextPage.key}
             translate={{x: this.pageWidth - this.state.scrollX}}>
-            {nextPage.content}
+            {nextPageNode}
           </AnimatableContainer>
         </div>
       );
@@ -121,16 +137,16 @@ var PageSlider = React.createClass({
     if (previousPage && slideInFrom === 'left' && !this.isScrollComplete()) {
       return (
         <div>
-          <AnimatableContainer className="page-slider-container"
+          <AnimatableContainer className={className}
             key={nextPage.key}
             translate={{x: -this.pageWidth + this.state.scrollX}}>
-            {nextPage.content}
+            {nextPageNode}
           </AnimatableContainer>
-          <AnimatableContainer className="page-slider-container"
+          <AnimatableContainer className={className}
             key={previousPage.key}
             translate={{x: this.state.scrollX}}
             opacity={1 - this.state.scrollX/this.pageWidth}>
-            {previousPage.content}
+            {previousPageNode}
           </AnimatableContainer>
         </div>
       );
@@ -139,14 +155,14 @@ var PageSlider = React.createClass({
     // Animation complete, or no slide-in animation required
     return (
       <div>
-        <AnimatableContainer className="page-slider-container"
+        <AnimatableContainer className={className}
           key={nextPage.key}
           translate={{x: 0}}>
-          {nextPage.content}
+          {nextPageNode}
         </AnimatableContainer>
       </div>
     );
   }
 });
 
-module.exports = PageSlider;
+module.exports = ContentSlider;

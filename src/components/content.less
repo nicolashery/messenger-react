@@ -1,0 +1,37 @@
+@import (reference) "../core/core.less";
+
+.content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  overflow: hidden;
+
+  width: auto;
+  height: auto;
+  
+  background: #fff;
+}
+
+// Inner element that scrolls
+.content-scroll {}
+
+.content-overflow-scroll {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+
+  .content-scroll {
+    position: static;
+    height: 100%;
+    // fix iOS bug where relative children of scroller disapear while scrolling
+    // see: http://stackoverflow.com/questions/9807620/ipad-safari-scrolling-causes-html-elements-to-disappear-and-reappear-with-a-dela
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
+.content-has-header {
+  top: @header-height;
+}

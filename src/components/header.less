@@ -1,3 +1,5 @@
+@import (reference) "../core/core.less";
+
 .header {
   position: absolute;
   top: 0;
@@ -5,9 +7,9 @@
   width: 100%;
   z-index: 1010;
 
-  height: 50px;
-  line-height: 50px;
-  border-bottom: 1px solid #ccc;
+  height: @header-height;
+  line-height: @header-height;
+  border-bottom: 1px solid @gray-border-dark;
   padding-left: 10px;
   padding-right: 10px;
   background: #fff;
